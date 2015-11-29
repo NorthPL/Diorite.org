@@ -1,0 +1,10 @@
+<module rename-to="dioritepage">
+    <inherits name="com.google.gwt.user.User" />
+
+    <entry-point class="org.diorite.web.client.DioritePageClient" />
+
+    <source path='client' />
+    <source path='shared' />
+
+    <super-source path="super" />
+</module>
