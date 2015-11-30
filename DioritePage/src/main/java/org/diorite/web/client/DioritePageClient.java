@@ -10,7 +10,13 @@ public class DioritePageClient implements EntryPoint
     @Override
     public void onModuleLoad()
     {
+        this.jsInit();
         RootPanel.get("content").add(new Button("Czesc"));
 
     }
+
+    private native void jsInit()/*-{
+        $('.button-collapse').sideNav();
+        console.log("dupa");
+    }-*/;
 }

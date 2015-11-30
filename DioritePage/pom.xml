@@ -18,6 +18,29 @@
 
     <dependencies>
         <dependency>
+            <groupId>javax</groupId>
+            <artifactId>javaee-api</artifactId>
+            <version>7.0</version>
+        </dependency>
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+            <version>3.1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>jstl</groupId>
+            <artifactId>jstl</artifactId>
+            <version>1.2</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>taglibs</groupId>
+            <artifactId>standard</artifactId>
+            <version>1.1.2</version>
+            <scope>compile</scope>
+        </dependency>
+
+        <dependency>
             <groupId>com.google.gwt</groupId>
             <artifactId>gwt-servlet</artifactId>
             <version>${gwt.version}</version>
@@ -29,9 +52,43 @@
             <version>${gwt.version}</version>
             <scope>provided</scope>
         </dependency>
+
+        <dependency>
+            <groupId>javax.ejb</groupId>
+            <artifactId>ejb-api</artifactId>
+            <version>3.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-core</artifactId>
+            <version>5.0.4.Final</version>
+        </dependency>
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-annotations</artifactId>
+            <version>3.5.6-Final</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>3.4</version>
+        </dependency>
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>2.4</version>
+        </dependency>
+        <dependency>
+            <groupId>commons-codec</groupId>
+            <artifactId>commons-codec</artifactId>
+            <version>1.10</version>
+        </dependency>
     </dependencies>
 
     <build>
+        <defaultGoal>clean install</defaultGoal>
+
         <plugins>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
@@ -49,9 +106,30 @@
                 <configuration>
                     <sourceLevel>1.7</sourceLevel>
                     <runTarget>index.jsp</runTarget>
-                    <copyWebapp>true</copyWebapp>
-                    <mode>htmlunit</mode>
                     <module>org.diorite.web.DioriteWeb</module>
+                    <webappDirectory>${project.build.directory}/${project.build.finalName}/js</webappDirectory>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-war-plugin</artifactId>
+                <version>2.6</version>
+                <configuration>
+                    <packagingExcludes>js/dioritepage/compilation-mappings.txt</packagingExcludes>
+                    <packagingExcludes>js/WEB-INF/**</packagingExcludes>
+                    <packagingExcludes>gwt-unitCache/**</packagingExcludes>
+
+                    <archive>
+                        <addMavenDescriptor>false</addMavenDescriptor>
+                        <manifestEntries>
+                            <Built-By>Diorite</Built-By>
+                            <Created-By>GotoFinal &amp; NorthPL</Created-By>
+                            <Implementation-Vendor>DioritePage-${project.artifactId}</Implementation-Vendor>
+                            <Specification-Vendor>DioritePage-${project.artifactId}</Specification-Vendor>
+                            <Sealed>false</Sealed>
+                        </manifestEntries>
+                    </archive>
                 </configuration>
             </plugin>
         </plugins>

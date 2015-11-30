@@ -35,11 +35,10 @@
 
 <div id="content"></div>
 
-<!--  Scripts-->
+<!-- Scripts -->
 <script src="js/jquery.min.js"></script>
 <script src="js/materialize.min.js"></script>
-<script src="js/init.js"></script>
-<script src="dioritepage/dioritepage.nocache.js"></script>
+<script src="js/dioritepage/dioritepage.nocache.js"></script>
 
 </body>
 </html>
