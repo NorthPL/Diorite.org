@@ -25,6 +25,7 @@
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>gwt-maven-plugin</artifactId>
                 <configuration>
+                    <webXml></webXml>
                     <modules>
                         <module>org.diorite.web.snake.SnakeModule</module>
                     </modules>
