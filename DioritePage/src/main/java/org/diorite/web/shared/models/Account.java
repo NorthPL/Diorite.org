@@ -18,22 +18,29 @@ public class Account
     private int id;
     @Column(name = "username", nullable = false, unique = true)
     private String username;
+    @Column(name = "displayname", nullable = true, unique = true)
+    private String displayName;
     @Column(name = "password")
-    private String password; // TODO add hashing
+    private transient String password; // TODO add hashing
     @Column(name = "email", nullable = false)
     private String email;
     // TODO add all required fields
 
     public Account()
     {
-        // enterprise bean must have empty constructor
     }
 
-    public Account(final String username, final String password, final String email)
+    public Account(final String username, final String displayName, final String password, final String email)
     {
         this.username = username;
+        this.displayName = displayName;
         this.password = password;
         this.email = email;
+    }
+
+    public String getName()
+    {
+        return this.hasDisplayName() ? this.displayName : this.username;
     }
 
     public String getUsername()
@@ -44,6 +51,21 @@ public class Account
     public void setUsername(final String username)
     {
         this.username = username;
+    }
+
+    public boolean hasDisplayName()
+    {
+        return this.displayName != null;
+    }
+
+    public String getDisplayName()
+    {
+        return this.displayName;
+    }
+
+    public void setDisplayName(final String displayName)
+    {
+        this.displayName = displayName;
     }
 
     public String getPassword()

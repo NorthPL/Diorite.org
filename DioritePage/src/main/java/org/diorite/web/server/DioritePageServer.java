@@ -17,13 +17,13 @@ public class DioritePageServer implements ServletContextListener
     public void contextInitialized(final ServletContextEvent servletContextEvent)
     {
         instance = this;
-        this.initHibernate();
+        //this.initHibernate();
     }
 
     @Override
     public void contextDestroyed(final ServletContextEvent servletContextEvent)
     {
-
+        this.hibernateSessionFactory.close();
     }
 
     public static DioritePageServer getInstance()
