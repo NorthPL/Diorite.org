@@ -9,19 +9,19 @@
     </welcome-file-list>
 
     <listener>
-        <listener-class>org.diorite.web.server.DioritePageServer</listener-class>
+        <listener-class>org.diorite.web.page.server.DioritePageServer</listener-class>
     </listener>
 
     <!-- servlets -->
 
     <servlet>
         <servlet-name>websiteInfoServiceImpl</servlet-name>
-        <servlet-class>org.diorite.web.server.communication.WebsiteInfoServiceImpl</servlet-class>
+        <servlet-class>org.diorite.web.page.server.communication.WebsiteInfoServiceImpl</servlet-class>
     </servlet>
 
     <servlet>
         <servlet-name>pageInfoServiceImpl</servlet-name>
-        <servlet-class>org.diorite.web.server.communication.PageInfoServiceImpl</servlet-class>
+        <servlet-class>org.diorite.web.page.server.communication.PageInfoServiceImpl</servlet-class>
     </servlet>
 
     <!-- servlet mappings -->

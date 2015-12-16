@@ -90,7 +90,7 @@
                 <configuration>
                     <sourceLevel>1.7</sourceLevel>
                     <runTarget>index.jsp</runTarget>
-                    <module>org.diorite.web.DioriteWeb</module>
+                    <module>org.diorite.web.page.DioritePage</module>
                     <webappDirectory>${project.build.directory}/${project.build.finalName}/js</webappDirectory>
                 </configuration>
             </plugin>
