@@ -4,6 +4,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 /**
@@ -24,18 +25,21 @@ public class Account
     private transient String password; // TODO add hashing
     @Column(name = "email", nullable = false)
     private String email;
+    @OneToOne
+    private Group group;
     // TODO add all required fields
 
     public Account()
     {
     }
 
-    public Account(final String username, final String displayName, final String password, final String email)
+    public Account(final String username, final String displayName, final String password, final String email, final Group group)
     {
         this.username = username;
         this.displayName = displayName;
         this.password = password;
         this.email = email;
+        this.group = group;
     }
 
     public String getName()
@@ -86,5 +90,15 @@ public class Account
     public void setEmail(final String email)
     {
         this.email = email;
+    }
+
+    public Group getGroup()
+    {
+        return this.group;
+    }
+
+    public void setGroup(final Group group)
+    {
+        this.group = group;
     }
 }

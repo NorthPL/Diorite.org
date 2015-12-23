@@ -1,3 +1,6 @@
+### DioritePage ###
+dev_hibernate.cfg.xml
+
 ### Maven ###
 target/
 pom.xml.tag
