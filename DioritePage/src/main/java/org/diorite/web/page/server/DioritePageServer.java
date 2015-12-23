@@ -1,4 +1,4 @@
-package org.diorite.web .page.server;
+package org.diorite.web.page.server;
 
 import javax.persistence.Entity;
 import javax.servlet.ServletContextEvent;
