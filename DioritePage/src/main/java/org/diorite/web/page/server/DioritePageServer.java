@@ -7,15 +7,9 @@ import javax.servlet.ServletContextListener;
 import java.util.Properties;
 import java.util.logging.Logger;
 
-import org.hibernate.HibernateException;
-import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
-
 import org.reflections.Reflections;
-
-import org.diorite.web.page.shared.models.Group;
 
 public class DioritePageServer implements ServletContextListener
 {
@@ -29,19 +23,6 @@ public class DioritePageServer implements ServletContextListener
         this.logger.info("Launching DioritePage server...");
         instance = this;
         this.initHibernate();
-
-        try (Session session = this.hibernateSessionFactory.openSession())
-        {
-            final Transaction transaction = session.beginTransaction();
-
-            session.save(new Group("testGroup"));
-
-            transaction.commit();
-        }
-        catch (final HibernateException exception)
-        {
-            exception.printStackTrace();
-        }
     }
 
     @Override
@@ -72,10 +53,11 @@ public class DioritePageServer implements ServletContextListener
     {
         final Properties properties = new Properties();
         properties.setProperty("hibernate.hbm2ddl.auto", "update");
+        properties.setProperty("hibernate.hbm2ddl.import_files", "classpath:/default_data.sql");
 
         final Configuration configuration = new Configuration();
 
-        if (Thread.currentThread().getContextClassLoader().getResource("dev_hibernate.cfg.xml") == null)
+        if (Thread.currentThread().getContextClassLoader().getResource("dev_hibernate.cfg.xml") == null) // TODO selecting configuration by environmental variables
         {
             configuration.configure();
         }

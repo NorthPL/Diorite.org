@@ -1,6 +1,8 @@
 package org.diorite.web.page.shared.exceptions;
 
-public class InvalidCredientalsException extends Exception
+import java.io.Serializable;
+
+public class InvalidCredientalsException extends Exception implements Serializable
 {
     public InvalidCredientalsException()
     {

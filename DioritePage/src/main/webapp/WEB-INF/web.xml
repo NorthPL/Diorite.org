@@ -24,6 +24,11 @@
         <servlet-class>org.diorite.web.page.server.communication.PageInfoServiceImpl</servlet-class>
     </servlet>
 
+    <servlet>
+        <servlet-name>authenticationServiceImpl</servlet-name>
+        <servlet-class>org.diorite.web.page.server.communication.AuthenticationServiceImpl</servlet-class>
+    </servlet>
+
     <!-- servlet mappings -->
 
     <servlet-mapping>
@@ -34,6 +39,11 @@
     <servlet-mapping>
         <servlet-name>pageInfoServiceImpl</servlet-name>
         <url-pattern>/api/pageInfo</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>authenticationServiceImpl</servlet-name>
+        <url-pattern>/api/authentication</url-pattern>
     </servlet-mapping>
 
 </web-app>

@@ -6,11 +6,13 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import java.io.Serializable;
+
 import org.hibernate.annotations.DynamicInsert;
 
 @Entity
 @Table(name = "groups")
-public class Group
+public class Group implements Serializable
 {
     @Id
     @GeneratedValue

@@ -15,7 +15,7 @@ public class WebsiteInfoServiceImpl extends RemoteServiceServlet implements Webs
     @Override
     public String getBaseHeaderName()
     {
-        return "Hello";
+        return "World of Diorite"; // :D
     }
 
     @Override

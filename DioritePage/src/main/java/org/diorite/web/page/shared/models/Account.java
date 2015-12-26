@@ -7,12 +7,16 @@ import javax.persistence.Id;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import java.io.Serializable;
+
+import com.google.gwt.core.client.GWT;
+
 /**
  * This class represents a user account
  */
 @Entity
 @Table(name = "accounts")
-public class Account
+public class Account implements Serializable
 {
     @Id
     @GeneratedValue
@@ -74,6 +78,10 @@ public class Account
 
     public String getPassword()
     {
+        if (GWT.isClient())
+        {
+            throw new IllegalStateException("Password is unavailable in client");
+        }
         return this.password;
     }
 

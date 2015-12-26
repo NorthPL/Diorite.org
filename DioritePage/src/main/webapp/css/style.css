@@ -99,3 +99,10 @@ p {
 footer.page-footer {
     margin: 0;
 }
+
+/* not related to materialize */
+
+.loginForm {
+    margin: 5% auto auto auto;
+    width: 25%;
+}

@@ -1,5 +1,7 @@
 package org.diorite.web.page.client;
 
+import javax.xml.registry.infomodel.User;
+
 import com.google.gwt.activity.shared.ActivityManager;
 import com.google.gwt.activity.shared.ActivityMapper;
 import com.google.gwt.core.client.EntryPoint;
@@ -10,12 +12,15 @@ import com.google.gwt.place.shared.PlaceController;
 import com.google.gwt.place.shared.PlaceHistoryHandler;
 import com.google.gwt.place.shared.PlaceHistoryMapper;
 import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.web.bindery.event.shared.EventBus;
 
+import org.diorite.web.page.client.places.LoginPlace;
 import org.diorite.web.page.client.places.RawHtmlPagePlace;
+import org.diorite.web.page.shared.models.UserContext;
 
 @SuppressWarnings("ClassHasNoToStringMethod")
 public class DioritePageClient implements EntryPoint
@@ -27,6 +32,7 @@ public class DioritePageClient implements EntryPoint
     private ActivityMapper activityMapper;
     private ActivityManager activityManager;
     private PlaceHistoryHandler historyHandler;
+    private UserContext userContext;
 
     @Override
     public void onModuleLoad()
@@ -45,12 +51,27 @@ public class DioritePageClient implements EntryPoint
         }
 
         //this.jsInit();
+        DioriteApi.getAuthenticationService().getContext(new AsyncCallback<UserContext>()
+        {
+            @Override
+            public void onFailure(final Throwable throwable)
+            {
+                // TODO
+            }
+
+            @Override
+            public void onSuccess(final UserContext userContext)
+            {
+                DioritePageClient.this.userContext = userContext;
+            }
+        });
         this.refreshHeader();
 
         RootPanel.get("content").add(this.appWidget);
 
         this.historyHandler.handleCurrentHistory();
-        this.placeController.goTo(new RawHtmlPagePlace("examplePage"));
+        //this.placeController.goTo(new RawHtmlPagePlace("examplePage"));
+        this.placeController.goTo(new LoginPlace(LoginPlace.Action.LOGIN));
     }
 
     public static DioritePageClient getClientInstance()
@@ -64,7 +85,7 @@ public class DioritePageClient implements EntryPoint
 
     public void refreshHeader()
     {
-        DioriteApi.getBasePageInfoService().getBaseTitleName(new AsyncCallback<String>()
+        DioriteApi.getBasePageInfoService().getBaseHeaderName(new AsyncCallback<String>()
         {
             @Override
             public void onFailure(final Throwable throwable)
@@ -75,6 +96,20 @@ public class DioritePageClient implements EntryPoint
             public void onSuccess(final String s)
             {
                 DOM.getElementById("logo-container").setInnerText(s);
+            }
+        });
+
+        DioriteApi.getBasePageInfoService().getBaseTitleName(new AsyncCallback<String>()
+        {
+            @Override
+            public void onFailure(final Throwable throwable)
+            {
+            }
+
+            @Override
+            public void onSuccess(final String s)
+            {
+                Window.setTitle(s);
             }
         });
 
