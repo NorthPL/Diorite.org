@@ -20,7 +20,7 @@ public class AuthenticationServiceImpl extends RemoteServiceServlet implements A
     @Override
     public UserContext getContext()
     {
-        return null;
+        return new UserContext();
     }
 
     @Override

@@ -11,7 +11,7 @@ import org.diorite.web.page.shared.communication.WebsiteInfoServiceAsync;
 
 public final class DioriteApi
 {
-    private static final WebsiteInfoServiceAsync    basePageInfoService   = (WebsiteInfoServiceAsync) GWT.create(WebsiteInfoService.class);
+    private static final WebsiteInfoServiceAsync    websiteInfoService    = (WebsiteInfoServiceAsync) GWT.create(WebsiteInfoService.class);
     private static final PageInfoServiceAsync       pageInfoService       = (PageInfoServiceAsync) GWT.create(PageInfoService.class);
     private static final AuthenticationServiceAsync authenticationService = (AuthenticationServiceAsync) GWT.create(AuthenticationService.class);
 
@@ -19,9 +19,9 @@ public final class DioriteApi
     {
     }
 
-    public static WebsiteInfoServiceAsync getBasePageInfoService()
+    public static WebsiteInfoServiceAsync getWebsiteInfoService()
     {
-        return basePageInfoService;
+        return websiteInfoService;
     }
 
     public static PageInfoServiceAsync getPageInfoService()

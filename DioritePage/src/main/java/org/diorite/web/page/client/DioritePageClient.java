@@ -1,11 +1,13 @@
 package org.diorite.web.page.client;
 
-import javax.xml.registry.infomodel.User;
-
 import com.google.gwt.activity.shared.ActivityManager;
 import com.google.gwt.activity.shared.ActivityMapper;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.Document;
+import com.google.gwt.dom.client.Element;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.shared.SimpleEventBus;
 import com.google.gwt.place.shared.Place;
 import com.google.gwt.place.shared.PlaceController;
@@ -13,13 +15,17 @@ import com.google.gwt.place.shared.PlaceHistoryHandler;
 import com.google.gwt.place.shared.PlaceHistoryMapper;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.Anchor;
+import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.web.bindery.event.shared.EventBus;
 
 import org.diorite.web.page.client.places.LoginPlace;
-import org.diorite.web.page.client.places.RawHtmlPagePlace;
+import org.diorite.web.page.client.utils.PlacesMapper;
+import org.diorite.web.page.client.utils.SimpleAsyncCallback;
+import org.diorite.web.page.shared.models.MenuEntry;
+import org.diorite.web.page.shared.models.PageData;
 import org.diorite.web.page.shared.models.UserContext;
 
 @SuppressWarnings("ClassHasNoToStringMethod")
@@ -45,33 +51,39 @@ public class DioritePageClient implements EntryPoint
             this.activityManager = new ActivityManager(this.activityMapper, this.eventBus);
             this.activityManager.setDisplay(this.appWidget);
 
-
+            //noinspection RedundantCast
             this.historyHandler = new PlaceHistoryHandler((PlaceHistoryMapper) GWT.create(DioritePlaceHistoryMapper.class));
             this.historyHandler.register(this.placeController, this.eventBus, null);
         }
 
         //this.jsInit();
-        DioriteApi.getAuthenticationService().getContext(new AsyncCallback<UserContext>()
+        DioriteApi.getAuthenticationService().getContext(new SimpleAsyncCallback<UserContext>()
         {
-            @Override
-            public void onFailure(final Throwable throwable)
-            {
-                // TODO
-            }
-
             @Override
             public void onSuccess(final UserContext userContext)
             {
                 DioritePageClient.this.userContext = userContext;
+                DioritePageClient.this.refreshHeader(); // user data downloaded, so we can now refresh header
             }
         });
-        this.refreshHeader();
+
+        final Anchor logoAnchor = Anchor.wrap(Document.get().getElementById("logo-container"));
+        logoAnchor.addClickHandler(new ClickHandler()
+        {
+            @Override
+            public void onClick(final ClickEvent clickEvent)
+            {
+                DioritePageClient.this.navigate(null);
+            }
+        });
 
         RootPanel.get("content").add(this.appWidget);
 
         this.historyHandler.handleCurrentHistory();
-        //this.placeController.goTo(new RawHtmlPagePlace("examplePage"));
-        this.placeController.goTo(new LoginPlace(LoginPlace.Action.LOGIN));
+        if (this.placeController.getWhere() == null) // navigate to default place if application was started without specified one
+        {
+            this.navigate(null);
+        }
     }
 
     public static DioritePageClient getClientInstance()
@@ -85,13 +97,8 @@ public class DioritePageClient implements EntryPoint
 
     public void refreshHeader()
     {
-        DioriteApi.getBasePageInfoService().getBaseHeaderName(new AsyncCallback<String>()
+        DioriteApi.getWebsiteInfoService().getBaseHeaderName(new SimpleAsyncCallback<String>()
         {
-            @Override
-            public void onFailure(final Throwable throwable)
-            {
-            }
-
             @Override
             public void onSuccess(final String s)
             {
@@ -99,13 +106,8 @@ public class DioritePageClient implements EntryPoint
             }
         });
 
-        DioriteApi.getBasePageInfoService().getBaseTitleName(new AsyncCallback<String>()
+        DioriteApi.getWebsiteInfoService().getBaseTitleName(new SimpleAsyncCallback<String>()
         {
-            @Override
-            public void onFailure(final Throwable throwable)
-            {
-            }
-
             @Override
             public void onSuccess(final String s)
             {
@@ -113,11 +115,61 @@ public class DioritePageClient implements EntryPoint
             }
         });
 
-        // TODO refresh menu
+        final Element menu = Document.get().getElementById("menu-entries-computer");
+
+        // TODO clean menu
+
+        DioriteApi.getWebsiteInfoService().getMenuEntries(new SimpleAsyncCallback<MenuEntry[]>()
+        {
+            @Override
+            public void onSuccess(final MenuEntry[] menuEntries)
+            {
+                for (final MenuEntry menuEntry : menuEntries)
+                {
+                    final Element li = Document.get().createLIElement();
+                    final Anchor a = new Anchor(menuEntry.getText());
+
+                    a.addClickHandler(new ClickHandler()
+                    {
+                        @Override
+                        public void onClick(final ClickEvent event)
+                        {
+                            DioritePageClient.this.placeController.goTo(PlacesMapper.mapEnumToPlace(menuEntry.getPageData()));
+                        }
+                    });
+
+                    HTMLPanel.wrap(li).add(a);
+                    menu.insertFirst(li);
+                }
+            }
+        });
+
+        final Anchor profileButton = Anchor.wrap(Document.get().getElementById("profile-login-button"));
+        profileButton.setText(this.userContext.isLoggedIn() ? "YOUR PROFILE" : "LOG IN");
+        profileButton.addClickHandler(new ClickHandler()
+        {
+            @Override
+            public void onClick(final ClickEvent clickEvent)
+            {
+                DioritePageClient.this.placeController.goTo(DioritePageClient.this.userContext.isLoggedIn() ? null/*TODO*/ : new LoginPlace(LoginPlace.Action.LOGIN));
+            }
+        });
     }
 
     public void navigate(final Place place)
     {
+        if (place == null)
+        {
+            DioriteApi.getWebsiteInfoService().getStartLocation(new SimpleAsyncCallback<PageData>()
+            {
+                @Override
+                public void onSuccess(final PageData pageData)
+                {
+                    DioritePageClient.this.placeController.goTo(PlacesMapper.mapEnumToPlace(pageData));
+                }
+            });
+            return;
+        }
         this.placeController.goTo(place);
     }
 
@@ -144,5 +196,10 @@ public class DioritePageClient implements EntryPoint
     public PlaceHistoryHandler getHistoryHandler()
     {
         return this.historyHandler;
+    }
+
+    public UserContext getUserContext()
+    {
+        return this.userContext;
     }
 }
