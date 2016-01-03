@@ -10,6 +10,8 @@ import org.diorite.web.page.shared.models.UserContext;
 @RemoteServiceRelativePath(value = "../../api/authentication")
 public interface AuthenticationService extends RemoteService
 {
+    void register(String username, String password, String email) throws IllegalArgumentException;
+
     UserContext login(LoginCredientals loginCredientals) throws InvalidCredientalsException;
 
     UserContext getContext();

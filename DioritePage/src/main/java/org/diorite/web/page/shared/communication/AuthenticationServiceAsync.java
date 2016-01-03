@@ -7,6 +7,8 @@ import org.diorite.web.page.shared.models.UserContext;
 
 public interface AuthenticationServiceAsync
 {
+    void register(String username, String password, String email, AsyncCallback<Void> callback);
+
     void login(LoginCredientals loginCredientals, AsyncCallback<UserContext> callback);
 
     void getContext(AsyncCallback<UserContext> callback);

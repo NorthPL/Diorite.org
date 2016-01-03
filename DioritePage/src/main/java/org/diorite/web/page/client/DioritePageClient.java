@@ -6,8 +6,6 @@ import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.shared.SimpleEventBus;
 import com.google.gwt.place.shared.Place;
 import com.google.gwt.place.shared.PlaceController;
@@ -38,7 +36,7 @@ public class DioritePageClient implements EntryPoint
     private ActivityMapper activityMapper;
     private ActivityManager activityManager;
     private PlaceHistoryHandler historyHandler;
-    private UserContext userContext;
+    private UserManager userManager;
 
     @Override
     public void onModuleLoad()
@@ -57,25 +55,10 @@ public class DioritePageClient implements EntryPoint
         }
 
         //this.jsInit();
-        DioriteApi.getAuthenticationService().getContext(new SimpleAsyncCallback<UserContext>()
-        {
-            @Override
-            public void onSuccess(final UserContext userContext)
-            {
-                DioritePageClient.this.userContext = userContext;
-                DioritePageClient.this.refreshHeader(); // user data downloaded, so we can now refresh header
-            }
-        });
+        this.userManager = new UserManager();
 
         final Anchor logoAnchor = Anchor.wrap(Document.get().getElementById("logo-container"));
-        logoAnchor.addClickHandler(new ClickHandler()
-        {
-            @Override
-            public void onClick(final ClickEvent clickEvent)
-            {
-                DioritePageClient.this.navigate(null);
-            }
-        });
+        logoAnchor.addClickHandler(clickEvent -> DioritePageClient.this.navigate(null));
 
         RootPanel.get("content").add(this.appWidget);
 
@@ -129,14 +112,7 @@ public class DioritePageClient implements EntryPoint
                     final Element li = Document.get().createLIElement();
                     final Anchor a = new Anchor(menuEntry.getText());
 
-                    a.addClickHandler(new ClickHandler()
-                    {
-                        @Override
-                        public void onClick(final ClickEvent event)
-                        {
-                            DioritePageClient.this.placeController.goTo(PlacesMapper.mapEnumToPlace(menuEntry.getPageData()));
-                        }
-                    });
+                    a.addClickHandler(event -> DioritePageClient.this.placeController.goTo(PlacesMapper.mapEnumToPlace(menuEntry.getPageData())));
 
                     HTMLPanel.wrap(li).add(a);
                     menu.insertFirst(li);
@@ -145,15 +121,8 @@ public class DioritePageClient implements EntryPoint
         });
 
         final Anchor profileButton = Anchor.wrap(Document.get().getElementById("profile-login-button"));
-        profileButton.setText(this.userContext.isLoggedIn() ? "YOUR PROFILE" : "LOG IN");
-        profileButton.addClickHandler(new ClickHandler()
-        {
-            @Override
-            public void onClick(final ClickEvent clickEvent)
-            {
-                DioritePageClient.this.placeController.goTo(DioritePageClient.this.userContext.isLoggedIn() ? null/*TODO*/ : new LoginPlace(LoginPlace.Action.LOGIN));
-            }
-        });
+        profileButton.setText(this.getUserContext().isLoggedIn() ? "YOUR PROFILE" : "LOG IN");
+        profileButton.addClickHandler(clickEvent -> DioritePageClient.this.placeController.goTo(DioritePageClient.this.getUserContext().isLoggedIn() ? null/*TODO*/ : new LoginPlace(LoginPlace.Action.LOGIN)));
     }
 
     public void navigate(final Place place)
@@ -198,8 +167,13 @@ public class DioritePageClient implements EntryPoint
         return this.historyHandler;
     }
 
+    public UserManager getUserManager()
+    {
+        return this.userManager;
+    }
+
     public UserContext getUserContext()
     {
-        return this.userContext;
+        return this.userManager.getUserContext();
     }
 }

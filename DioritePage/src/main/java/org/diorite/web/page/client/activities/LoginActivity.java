@@ -5,7 +5,9 @@ import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 
 import org.diorite.web.page.client.places.LoginPlace;
-import org.diorite.web.page.client.views.LoginFormView;
+import org.diorite.web.page.client.views.authentication.LoginFormView;
+import org.diorite.web.page.client.views.authentication.PasswordLostView;
+import org.diorite.web.page.client.views.authentication.RegisterFormView;
 
 public class LoginActivity extends AbstractActivity
 {
@@ -28,6 +30,12 @@ public class LoginActivity extends AbstractActivity
         {
             case LOGIN:
                 acceptsOneWidget.setWidget(new LoginFormView());
+                break;
+            case REGISTER:
+                acceptsOneWidget.setWidget(new RegisterFormView());
+                break;
+            case RESET_PASSWORD:
+                acceptsOneWidget.setWidget(new PasswordLostView());
                 break;
             default:
                 // TODO show error

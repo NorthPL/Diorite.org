@@ -5,14 +5,14 @@ import java.util.Map;
 
 import com.google.gwt.place.shared.Place;
 
+import org.diorite.web.page.client.places.LoginPlace;
 import org.diorite.web.page.client.places.RawHtmlPagePlace;
 import org.diorite.web.page.shared.models.PageData;
 import org.diorite.web.page.shared.utils.Places;
 
-@SuppressWarnings("Convert2Lambda") // We can't use lambdas in language level 7 :(
 public final class PlacesMapper
 {
-    @SuppressWarnings("InterfaceMayBeAnnotatedFunctional")
+    @FunctionalInterface
     public interface MappingResolver
     {
         Place map(String[] args);
@@ -45,14 +45,8 @@ public final class PlacesMapper
 
     static
     {
-        registerMapping(Places.STATIC_PAGE, new MappingResolver()
-        {
-            @Override
-            public Place map(final String[] args)
-            {
-                return new RawHtmlPagePlace(args[0]);
-            }
-        });
+        registerMapping(Places.STATIC_PAGE, args -> new RawHtmlPagePlace(args[0]));
+        registerMapping(Places.LOGIN_FORM, args -> new LoginPlace(LoginPlace.Action.LOGIN));
         //registerMapping(DefaultPlaces.FORUM, args -> ); // TODO
     }
 }

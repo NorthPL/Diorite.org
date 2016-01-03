@@ -11,11 +11,20 @@ import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 import org.reflections.Reflections;
 
+import org.diorite.web.page.server.dao.AccountsDao;
+import org.diorite.web.page.server.dao.GroupsDao;
+import org.diorite.web.page.server.settings.DioritePageSettings;
+import org.diorite.web.page.shared.models.Account;
+
+@SuppressWarnings("ClassHasNoToStringMethod")
 public class DioritePageServer implements ServletContextListener
 {
     private static DioritePageServer instance;
     private final Logger logger = Logger.getLogger("DioritePage");
     private SessionFactory hibernateSessionFactory;
+    private DioritePageSettings settings;
+    private GroupsDao groupsDao;
+    private AccountsDao accountsDao;
 
     @Override
     public void contextInitialized(final ServletContextEvent servletContextEvent)
@@ -23,6 +32,9 @@ public class DioritePageServer implements ServletContextListener
         this.logger.info("Launching DioritePage server...");
         instance = this;
         this.initHibernate();
+        this.settings = new DioritePageSettings();
+        this.groupsDao = new GroupsDao();
+        this.accountsDao = new AccountsDao();
     }
 
     @Override
@@ -55,6 +67,12 @@ public class DioritePageServer implements ServletContextListener
         properties.setProperty("hibernate.hbm2ddl.auto", "update");
         properties.setProperty("hibernate.hbm2ddl.import_files", "classpath:/default_data.sql");
 
+        properties.setProperty("hibernate.c3p0.min_size", "1");
+        properties.setProperty("hibernate.c3p0.max_size", "50");
+        properties.setProperty("hibernate.c3p0.timeout", "300");
+        properties.setProperty("hibernate.c3p0.max_statements", "50");
+        properties.setProperty("hibernate.c3p0.idle_test_period", "30");
+
         final Configuration configuration = new Configuration();
 
         if (Thread.currentThread().getContextClassLoader().getResource("dev_hibernate.cfg.xml") == null) // TODO selecting configuration by environmental variables
@@ -69,9 +87,24 @@ public class DioritePageServer implements ServletContextListener
 
         configuration.addProperties(properties);
         configuration.setPhysicalNamingStrategy(new DioriteNamingStrategy());
-        //noinspection ConstantConditions
+
         new Reflections("org.diorite.web.page").getTypesAnnotatedWith(Entity.class).forEach(configuration::addAnnotatedClass);
 
         this.hibernateSessionFactory = configuration.buildSessionFactory();
+    }
+
+    public DioritePageSettings getSettings()
+    {
+        return this.settings;
+    }
+
+    public GroupsDao getGroups()
+    {
+        return this.groupsDao;
+    }
+
+    public AccountsDao getAccounts()
+    {
+        return this.accountsDao;
     }
 }
