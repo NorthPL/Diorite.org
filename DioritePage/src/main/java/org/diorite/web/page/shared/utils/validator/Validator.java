@@ -1,4 +1,4 @@
-package org.diorite.utils.validator;
+package org.diorite.web.page.shared.utils.validator;
 
 import java.util.function.Predicate;
 

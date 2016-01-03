@@ -1,4 +1,4 @@
-package org.diorite.utils.validator;
+package org.diorite.web.page.shared.utils.validator;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -6,12 +6,13 @@ import java.util.function.BiFunction;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
 
-import org.diorite.utils.validator.SimpleValidator.ValidatorEntry;
-import org.diorite.utils.validator.string.StringAllowedCharsValidator;
-import org.diorite.utils.validator.string.StringCustomValidator;
-import org.diorite.utils.validator.string.StringDisallowedCharsValidator;
-import org.diorite.utils.validator.string.StringLengthValidator;
-import org.diorite.utils.validator.string.StringRegExValidator;
+import org.diorite.web.page.shared.utils.validator.SimpleValidator.ValidatorEntry;
+import org.diorite.web.page.shared.utils.validator.string.StringAllowedCharsValidator;
+import org.diorite.web.page.shared.utils.validator.string.StringCustomValidator;
+import org.diorite.web.page.shared.utils.validator.string.StringDisallowedCharsValidator;
+import org.diorite.web.page.shared.utils.validator.string.StringLengthValidator;
+import org.diorite.web.page.shared.utils.validator.string.StringRegExValidator;
+import org.diorite.web.page.shared.utils.validator.string.StringRequiredCharsValidator;
 
 /**
  * Utility class for creating ValidatorEntires for Strings
@@ -250,6 +251,44 @@ public final class StringValidators
     public static Validator<String> disallowedChars(final BiFunction<String, StringDisallowedCharsValidator, ? extends IllegalArgumentException> exception, final String... chars)
     {
         return disallowedChars(chars, exception);
+    }
+
+    /**
+     * Create new String required chars validator that don't throw exception on invalid parameter.
+     *
+     * @param chars array of strings contains ranges of required chars.
+     *
+     * @return created validator.
+     */
+    public static Validator<String> requiredChars(final String... chars)
+    {
+        return requiredChars(chars, null);
+    }
+
+    /**
+     * Create new String required chars validator that throws given exception on invalid parameter.
+     *
+     * @param chars     array of strings contains ranges of required chars.
+     * @param exception function that create exception from validated object and used validator. If function will return null, validator will not throw any exception.
+     *
+     * @return created validator.
+     */
+    public static Validator<String> requiredChars(final String[] chars, final BiFunction<String, StringRequiredCharsValidator, ? extends IllegalArgumentException> exception)
+    {
+        return new ValidatorEntry<>(StringRequiredCharsValidator.create(joinRanges(chars)), exception);
+    }
+
+    /**
+     * Create new String required chars validator that throws given exception on invalid parameter.
+     *
+     * @param exception function that create exception from validated object and used validator. If function will return null, validator will not throw any exception.
+     * @param chars     array of strings contains ranges of required chars.
+     *
+     * @return created validator.
+     */
+    public static Validator<String> requiredChars(final BiFunction<String, StringRequiredCharsValidator, ? extends IllegalArgumentException> exception, final String... chars)
+    {
+        return requiredChars(chars, exception);
     }
 
     private static char[] joinRanges(final String... ranges)

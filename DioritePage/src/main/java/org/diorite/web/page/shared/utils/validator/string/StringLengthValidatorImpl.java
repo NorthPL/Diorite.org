@@ -1,4 +1,4 @@
-package org.diorite.utils.validator.string;
+package org.diorite.web.page.shared.utils.validator.string;
 
 import org.apache.commons.lang3.Validate;
 import org.apache.commons.lang3.builder.ToStringBuilder;

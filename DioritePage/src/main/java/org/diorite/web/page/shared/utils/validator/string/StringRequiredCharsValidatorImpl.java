@@ -6,14 +6,14 @@ import org.apache.commons.lang3.Validate;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-class StringAllowedCharsValidatorImpl implements StringAllowedCharsValidator
+public class StringRequiredCharsValidatorImpl implements StringRequiredCharsValidator
 {
     private final char[] chars;
 
-    StringAllowedCharsValidatorImpl(final char[] chars)
+    public StringRequiredCharsValidatorImpl(final char[] chars)
     {
-        Validate.notNull(chars, "Chars can't be null.");
-        this.chars = chars.clone();
+        Validate.notNull(chars, "Chars can't be null!");
+        this.chars = chars;
         Arrays.sort(this.chars);
     }
 
@@ -24,7 +24,7 @@ class StringAllowedCharsValidatorImpl implements StringAllowedCharsValidator
     }
 
     @Override
-    public boolean validate(final String s)
+    public boolean validate(final String s) throws RuntimeException
     {
         if (s == null)
         {
@@ -47,13 +47,15 @@ class StringAllowedCharsValidatorImpl implements StringAllowedCharsValidator
         {
             return true;
         }
-        if (! (o instanceof StringAllowedCharsValidator))
+        if ((o == null) || (this.getClass() != o.getClass()))
         {
             return false;
         }
 
-        final StringAllowedCharsValidator that = (StringAllowedCharsValidator) o;
-        return Arrays.equals(this.chars, that.getChars());
+        final StringRequiredCharsValidatorImpl that = (StringRequiredCharsValidatorImpl) o;
+
+        return Arrays.equals(this.chars, that.chars);
+
     }
 
     @Override

@@ -1,8 +1,8 @@
-package org.diorite.utils.validator.string;
+package org.diorite.web.page.shared.utils.validator.string;
 
 import java.util.function.Predicate;
 
-import org.diorite.utils.validator.Validator;
+import org.diorite.web.page.shared.utils.validator.Validator;
 
 /**
  * Validator interface for custom String check.

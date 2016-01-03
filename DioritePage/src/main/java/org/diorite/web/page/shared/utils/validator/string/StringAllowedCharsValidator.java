@@ -1,4 +1,4 @@
-package org.diorite.utils.validator.string;
+package org.diorite.web.page.shared.utils.validator.string;
 
 /**
  * Validator interface for String allowed chars check.
