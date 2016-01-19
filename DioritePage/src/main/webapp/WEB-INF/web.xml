@@ -4,15 +4,26 @@
          xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd"
          version="3.1">
 
-    <welcome-file-list>
-        <welcome-file>index.jsp</welcome-file>
-    </welcome-file-list>
+    <servlet>
+        <servlet-name>index</servlet-name>
+        <jsp-file>/index.jsp</jsp-file>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>index</servlet-name>
+        <url-pattern>/*</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>default</servlet-name>
+        <url-pattern>/static/*</url-pattern>
+    </servlet-mapping>
 
     <listener>
         <listener-class>org.diorite.web.page.server.DioritePageServer</listener-class>
     </listener>
 
-    <!-- servlets -->
+    <!-- rpc servlets -->
 
     <servlet>
         <servlet-name>websiteInfoServiceImpl</servlet-name>
@@ -29,7 +40,12 @@
         <servlet-class>org.diorite.web.page.server.communication.AuthenticationServiceImpl</servlet-class>
     </servlet>
 
-    <!-- servlet mappings -->
+    <servlet>
+        <servlet-name>administrationServiceImpl</servlet-name>
+        <servlet-class>org.diorite.web.page.server.communication.AdministrationServiceImpl</servlet-class>
+    </servlet>
+
+    <!-- rpc servlet mappings -->
 
     <servlet-mapping>
         <servlet-name>websiteInfoServiceImpl</servlet-name>
@@ -44,6 +60,11 @@
     <servlet-mapping>
         <servlet-name>authenticationServiceImpl</servlet-name>
         <url-pattern>/api/authentication</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>administrationServiceImpl</servlet-name>
+        <url-pattern>/api/administration</url-pattern>
     </servlet-mapping>
 
 </web-app>

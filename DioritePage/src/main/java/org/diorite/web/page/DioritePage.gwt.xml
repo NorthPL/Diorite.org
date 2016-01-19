@@ -1,6 +1,7 @@
 <module rename-to="dioritepage">
     <inherits name="com.google.gwt.user.User" />
     <inherits name="com.google.gwt.activity.Activity" />
+    <inherits name="com.google.gwt.logging.Logging"/>
 
     <entry-point class="org.diorite.web.page.client.DioritePageClient" />
 

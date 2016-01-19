@@ -9,10 +9,15 @@ import org.hibernate.Transaction;
 import org.hibernate.criterion.Restrictions;
 
 import org.diorite.web.page.server.DioritePageServer;
+import org.diorite.web.page.server.settings.AutoRefreshable;
 import org.diorite.web.page.shared.models.Group;
 
+@SuppressWarnings("ClassHasNoToStringMethod")
 public class GroupsDao
 {
+    private final AutoRefreshable<Group> guestGroup = new AutoRefreshable<>(GUEST_GROUP, values -> this.getGroupById(values.get(GUEST_GROUP).getValue()));
+    private final AutoRefreshable<Group> defaultUserGroup = new AutoRefreshable<>(DEFAULT_GROUP, values -> this.getGroupById(values.get(DEFAULT_GROUP).getValue()));
+
     public void insertOrUpdateGroup(final Group group)
     {
         try (Session session = DioritePageServer.getInstance().getHibernateSessionFactory().openSession())
@@ -49,11 +54,11 @@ public class GroupsDao
 
     public Group getGuestGroup()
     {
-        return this.getGroupById(DioritePageServer.getInstance().getSettings().get(GUEST_GROUP));
+        return this.guestGroup.get();
     }
 
     public Group getDefaultUserGroup()
     {
-        return this.getGroupById(DioritePageServer.getInstance().getSettings().get(DEFAULT_GROUP));
+        return this.defaultUserGroup.get();
     }
 }

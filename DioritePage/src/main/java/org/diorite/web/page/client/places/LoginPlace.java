@@ -25,7 +25,7 @@ public class LoginPlace extends Place
 
     public enum Action
     {
-        LOGIN, REGISTER, RESET_PASSWORD;
+        LOGIN, REGISTER, RESET_PASSWORD
     }
 
     public static class Tokenizer implements PlaceTokenizer<LoginPlace>

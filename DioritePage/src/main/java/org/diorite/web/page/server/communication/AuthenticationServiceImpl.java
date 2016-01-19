@@ -1,15 +1,20 @@
 package org.diorite.web.page.server.communication;
 
-import static org.diorite.web.page.server.settings.SettingsConstants.*;
+import static org.diorite.web.page.server.settings.SettingsConstants.MAX_USERNAME_LENGTH;
+import static org.diorite.web.page.server.settings.SettingsConstants.MIN_USERNAME_LENGTH;
 
+
+import javax.servlet.http.HttpSession;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
 import org.apache.commons.lang3.ArrayUtils;
+import org.hibernate.Criteria;
+import org.hibernate.Session;
+import org.hibernate.criterion.Restrictions;
 
 import org.diorite.web.page.server.DioritePageServer;
 import org.diorite.web.page.server.settings.AutoRefreshable;
-import org.diorite.web.page.server.settings.DioritePageSettings;
 import org.diorite.web.page.shared.communication.AuthenticationService;
 import org.diorite.web.page.shared.exceptions.InvalidCredientalsException;
 import org.diorite.web.page.shared.models.Account;
@@ -21,6 +26,7 @@ import org.diorite.web.page.shared.utils.validator.Validator;
 @SuppressWarnings("ClassHasNoToStringMethod")
 public class AuthenticationServiceImpl extends RemoteServiceServlet implements AuthenticationService
 {
+    private static final String USER_SESSION_ATTRIBUTE_NAME = "diorite_user_context";
     private final AutoRefreshable<Validator<String>> userNameValidator;
     private final Validator<String> passwordValidator;
     private final Validator<String> emailValidator;
@@ -40,7 +46,7 @@ public class AuthenticationServiceImpl extends RemoteServiceServlet implements A
     {
         this.userNameValidator.get().validate(username);
         this.passwordValidator.validate(password);
-        this.emailValidator.validate(email);
+        //this.emailValidator.validate(email); // TODO fix validator
 
         if (DioritePageServer.getInstance().getAccounts().getAccountByName(username) != null)
         {
@@ -53,21 +59,45 @@ public class AuthenticationServiceImpl extends RemoteServiceServlet implements A
     @Override
     public UserContext login(final LoginCredientals loginCredientals) throws InvalidCredientalsException
     {
-        // TODO check credientals
-        // TODO return user context
-        throw new IllegalArgumentException();
-        //return null;
+        final UserContext newContext;
+        try (Session session = DioritePageServer.getInstance().getHibernateSessionFactory().openSession())
+        {
+            final Criteria loginCriteria = session.createCriteria(Account.class);
+
+            loginCriteria.add(Restrictions.eq("username", loginCredientals.getUsername()));
+            loginCriteria.add(Restrictions.eq("password", loginCredientals.getPassword())); // TODO Hash password
+
+            final Account account = (Account) loginCriteria.uniqueResult();
+            if (account == null)
+            {
+                throw new IllegalArgumentException();
+            }
+            newContext = new UserContext(account);
+        }
+
+        final HttpSession session = this.getThreadLocalRequest().getSession();
+        session.setAttribute(USER_SESSION_ATTRIBUTE_NAME, newContext);
+
+        return newContext;
     }
 
     @Override
     public UserContext getContext()
     {
-        return new UserContext();
+        final HttpSession session = this.getThreadLocalRequest().getSession();
+        final UserContext userContext = (UserContext) session.getAttribute(USER_SESSION_ATTRIBUTE_NAME);
+
+        if (userContext == null)
+        {
+            return new UserContext(DioritePageServer.getInstance().getGroups().getGuestGroup());
+        }
+
+        return userContext;
     }
 
     @Override
     public void logout()
     {
-
+        this.getThreadLocalRequest().getSession().removeAttribute(USER_SESSION_ATTRIBUTE_NAME);
     }
 }

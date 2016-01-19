@@ -9,6 +9,7 @@ import org.diorite.web.page.client.views.authentication.LoginFormView;
 import org.diorite.web.page.client.views.authentication.PasswordLostView;
 import org.diorite.web.page.client.views.authentication.RegisterFormView;
 
+@SuppressWarnings("ClassHasNoToStringMethod")
 public class LoginActivity extends AbstractActivity
 {
     private final LoginPlace loginPlace;

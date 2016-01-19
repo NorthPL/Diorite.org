@@ -1,5 +1,7 @@
 package org.diorite.web.page.server;
 
+import static org.diorite.web.page.server.settings.SettingsConstants.BASE_PAGE_URL;
+
 import javax.persistence.Entity;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
@@ -14,7 +16,6 @@ import org.reflections.Reflections;
 import org.diorite.web.page.server.dao.AccountsDao;
 import org.diorite.web.page.server.dao.GroupsDao;
 import org.diorite.web.page.server.settings.DioritePageSettings;
-import org.diorite.web.page.shared.models.Account;
 
 @SuppressWarnings("ClassHasNoToStringMethod")
 public class DioritePageServer implements ServletContextListener
@@ -106,5 +107,10 @@ public class DioritePageServer implements ServletContextListener
     public AccountsDao getAccounts()
     {
         return this.accountsDao;
+    }
+
+    public String getBaseUrl()
+    {
+        return this.settings.get(BASE_PAGE_URL);
     }
 }

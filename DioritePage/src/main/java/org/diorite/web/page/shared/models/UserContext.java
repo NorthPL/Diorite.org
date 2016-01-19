@@ -6,6 +6,7 @@ import java.io.Serializable;
 public final class UserContext implements Serializable
 {
     private Account account;
+    private Group   group;
 
     public UserContext()
     {
@@ -13,7 +14,22 @@ public final class UserContext implements Serializable
 
     public UserContext(final Account account)
     {
+        this(account, null);
+    }
+
+    public UserContext(final Group group)
+    {
+        this(null, group);
+    }
+
+    private UserContext(final Account account, final Group group)
+    {
+        if ((account == null) && (group == null))
+        {
+            throw new IllegalArgumentException();
+        }
         this.account = account;
+        this.group = group;
     }
 
     public Account getAccount()
@@ -23,7 +39,10 @@ public final class UserContext implements Serializable
 
     public Group getGroup()
     {
-        // if account == null, return guest group
+        if (this.account == null)
+        {
+            return this.group;
+        }
         return this.account.getGroup();
     }
 

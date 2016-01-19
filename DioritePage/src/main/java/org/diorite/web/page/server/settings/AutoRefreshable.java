@@ -4,6 +4,7 @@ import java.util.IdentityHashMap;
 import java.util.Map;
 import java.util.function.Function;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -21,6 +22,11 @@ public final class AutoRefreshable<T>
         this.producer = producer;
 
         DioritePageServer.getInstance().getSettings().addListener(settings, this::produce);
+    }
+
+    public AutoRefreshable(final String settings, final Function<Map<String, SettingsEntry>, T> producer)
+    {
+        this(ArrayUtils.toArray(settings), producer);
     }
 
     public T get()

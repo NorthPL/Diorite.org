@@ -8,8 +8,6 @@ import javax.persistence.Table;
 
 import java.io.Serializable;
 
-import org.hibernate.annotations.DynamicInsert;
-
 @Entity
 @Table(name = "groups")
 public class Group implements Serializable

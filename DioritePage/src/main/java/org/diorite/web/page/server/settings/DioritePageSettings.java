@@ -25,6 +25,8 @@ public final class DioritePageSettings
     private final Collection<SettingsListener> listeners = new ArrayList<>(10);
 
     {
+        this.defaultEntry(new SettingsEntry(BASE_PAGE_URL, SettingsEntry.Type.STRING, "http://localhost:8080"));
+
         this.defaultEntry(new SettingsEntry(MAX_USERNAME_LENGTH, SettingsEntry.Type.INTEGER, 20));
         this.defaultEntry(new SettingsEntry(MIN_USERNAME_LENGTH, SettingsEntry.Type.INTEGER, 3));
 

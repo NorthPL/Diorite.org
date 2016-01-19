@@ -32,7 +32,7 @@ public class StringRequiredCharsValidatorImpl implements StringRequiredCharsVali
         }
         for (final char c : s.toCharArray())
         {
-            if (Arrays.binarySearch(this.chars, c) < 0)
+            if (Arrays.binarySearch(this.chars, c) < 0) // TODO fix it
             {
                 return false;
             }

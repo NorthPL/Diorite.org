@@ -10,6 +10,7 @@ import javax.persistence.Table;
 import java.io.Serializable;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.rpc.GwtTransient;
 
 /**
  * This class represents a user account
@@ -26,7 +27,8 @@ public class Account implements Serializable
     @Column(name = "displayname", nullable = true, unique = true)
     private String displayName;
     @Column(name = "password")
-    private transient String password; // TODO add hashing
+    @GwtTransient
+    private String password; // TODO add hashing
     @Column(name = "email", nullable = false)
     private String email;
     @OneToOne

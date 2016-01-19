@@ -25,8 +25,8 @@ import com.google.gwt.user.client.ui.Widget;
 public class InputLabel extends ButtonBase implements HasName, HasValue<String>, HasChangeHandlers
 {
     InputElement inputElem;
-    LabelElement labelElem;
-    private boolean valueChangeHandlerInitialized;
+    final   LabelElement labelElem;
+    private boolean      valueChangeHandlerInitialized;
 
     public InputLabel()
     {
@@ -85,14 +85,7 @@ public class InputLabel extends ButtonBase implements HasName, HasValue<String>,
         // Is this the first value change handler? If so, time to add handlers
         if (! this.valueChangeHandlerInitialized)
         {
-            this.addChangeHandler(new ChangeHandler()
-            {
-                @Override
-                public void onChange(final ChangeEvent event)
-                {
-                    ValueChangeEvent.fire(InputLabel.this, InputLabel.this.getValue());
-                }
-            });
+            this.addChangeHandler(event -> ValueChangeEvent.fire(InputLabel.this, InputLabel.this.getValue()));
             this.valueChangeHandlerInitialized = true;
         }
         return this.addHandler(handler, ValueChangeEvent.getType());

@@ -6,6 +6,8 @@ public final class SettingsConstants
     {
     }
 
+    public static final String BASE_PAGE_URL = "base_page_url";
+
     public static final String MAX_USERNAME_LENGTH = "max_username_length";
     public static final String MIN_USERNAME_LENGTH = "min_username_length";
 

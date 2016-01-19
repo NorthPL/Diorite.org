@@ -97,7 +97,7 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
                     <excludes>
-                        <exclude>**/src/main/java/org/diorite/web/page/client/**</exclude>
+                        <exclude>/src/main/java/org/diorite/web/page/client/**</exclude>
                     </excludes>
                 </configuration>
             </plugin>
@@ -118,7 +118,7 @@
                     <sourceLevel>1.8</sourceLevel>
                     <runTarget>index.jsp</runTarget>
                     <module>org.diorite.web.page.DioritePage</module>
-                    <webappDirectory>${project.build.directory}/${project.build.finalName}/js</webappDirectory>
+                    <webappDirectory>${project.build.directory}/${project.build.finalName}/static/js</webappDirectory>
                 </configuration>
             </plugin>
 
@@ -127,9 +127,9 @@
                 <artifactId>maven-war-plugin</artifactId>
                 <version>2.6</version>
                 <configuration>
-                    <packagingExcludes>js/dioritepage/compilation-mappings.txt</packagingExcludes>
-                    <packagingExcludes>js/WEB-INF/**</packagingExcludes>
-                    <packagingExcludes>gwt-unitCache/**</packagingExcludes>
+                    <packagingExcludes>static/js/dioritepage/compilation-mappings.txt</packagingExcludes>
+                    <packagingExcludes>static/js/WEB-INF/**</packagingExcludes>
+                    <packagingExcludes>static/gwt-unitCache/**</packagingExcludes>
 
                     <archive>
                         <addMavenDescriptor>false</addMavenDescriptor>

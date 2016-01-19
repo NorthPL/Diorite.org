@@ -1,7 +1,5 @@
 package org.diorite.web.page.client;
 
-import com.google.gwt.user.client.rpc.AsyncCallback;
-
 import org.diorite.web.page.client.utils.SimpleAsyncCallback;
 import org.diorite.web.page.shared.exceptions.NotLoggedInException;
 import org.diorite.web.page.shared.models.LoginCredientals;
@@ -26,8 +24,13 @@ public final class UserManager
 
     public void contextChanged(final UserContext newContext)
     {
+        final boolean initialContextLoad = this.userContext == null;
         UserManager.this.userContext = newContext;
         DioritePageClient.getClientInstance().refreshHeader(); // user data downloaded, so we can now refresh header
+        if (initialContextLoad)
+        {
+            return;
+        }
         DioritePageClient.getClientInstance().navigate(null);
     }
 
